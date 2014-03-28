@@ -13,12 +13,15 @@
 # received a copy of the GNU Lesser General Public License along with
 # sot-dyninv. If not, see <http://www.gnu.org/licenses/>.
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
-INCLUDE(cmake/base.cmake)
-INCLUDE(cmake/boost.cmake)
-INCLUDE(cmake/lapack.cmake)
-INCLUDE(cmake/cpack.cmake)
+find_package(catkin REQUIRED COMPONENTS sot_cmake jrl-mal dynamic-graph sot-core soth)
+find_package(Eigen REQUIRED)
+
+INCLUDE(${SOT_CMAKE_DIR}/base.cmake)
+INCLUDE(${SOT_CMAKE_DIR}/boost.cmake)
+INCLUDE(${SOT_CMAKE_DIR}/lapack.cmake)
+INCLUDE(${SOT_CMAKE_DIR}/cpack.cmake)
 
 SET(PROJECT_NAME sot-dyninv)
 SET(PROJECT_DESCRIPTION "control by inverse dynamics.")
@@ -36,13 +39,10 @@ SET(PKG_CONFIG_ADDITIONAL_VARIABLES
   )
 
 SETUP_PROJECT()
+include_directories(${catkin_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS})
+link_directories(${DYNAMIC_GRAPH_PLUGINDIR})
 
-# Search for dependencies.
-ADD_REQUIRED_DEPENDENCY("jrl-mal >= 1.8.0")
-ADD_REQUIRED_DEPENDENCY("dynamic-graph >= 1.0.0")
-ADD_REQUIRED_DEPENDENCY("sot-core >= 1.0.0")
-ADD_REQUIRED_DEPENDENCY("soth >= 0.0.1")
-
+catkin_package(DEPENDS soth)
 
 # List plug-ins that will be compiled.
 SET(libs
@@ -107,38 +107,19 @@ SET(headers
 )
 
 list(APPEND task-dyn-limits_plugins_dependencies task-dyn-pd)
+list(APPEND solver-op-space_plugins_dependencies task-dyn-pd)
+list(APPEND solver-kine_plugins_dependencies task-dyn-pd)
+list(APPEND solver-dyn-reduced_plugins_dependencies task-dyn-pd)
 list(APPEND task-dyn-inequality_plugins_dependencies task-dyn-pd)
 list(APPEND task-dyn-joint-limits_plugins_dependencies task-dyn-pd)
 list(APPEND task-dyn-passing-point_plugins_dependencies task-dyn-pd)
 list(APPEND pseudo-robot-dynamic_plugins_dependencies dynamic-integrator)
 list(APPEND contact-selecter_plugins_dependencies solver-dyn-reduced)
 
-foreach(lib task-weight task-inequality task-dyn-pd task-joint-limits)
-	IF(WIN32)
-		list(APPEND ${lib}_ext_plugins_dependencies
-			${DYNAMIC_GRAPH_PLUGINDIR}/task${CMAKE_LINK_LIBRARY_SUFFIX})
-	ELSE(WIN32)
-		list(APPEND ${lib}_ext_plugins_dependencies
-			${DYNAMIC_GRAPH_PLUGINDIR}/task${CMAKE_SHARED_LIBRARY_SUFFIX})
-	ENDIF(WIN32)
-endforeach(lib)
-
-foreach(lib solver-op-space solver-dyn-reduced solver-dyn-red2)
-	list(APPEND ${lib}_plugins_dependencies task-dyn-pd)
-
-	IF(WIN32)
-		list(APPEND ${lib}_ext_plugins_dependencies
-			${DYNAMIC_GRAPH_PLUGINDIR}/feature-point6d${CMAKE_LINK_LIBRARY_SUFFIX})
-	ELSE(WIN32)
-		list(APPEND ${lib}_ext_plugins_dependencies
-			${DYNAMIC_GRAPH_PLUGINDIR}/feature-point6d${CMAKE_SHARED_LIBRARY_SUFFIX})
-	ENDIF(WIN32)
-endforeach(lib)
-
 # Add subdirectories.
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(python)
-ADD_SUBDIRECTORY(unitTesting)
+#ADD_SUBDIRECTORY(unitTesting)
 
 # Configure some of the python files
 CONFIGURE_FILE(

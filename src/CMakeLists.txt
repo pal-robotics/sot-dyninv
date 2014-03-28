@@ -14,7 +14,7 @@
 # received a copy of the GNU Lesser General Public License along with
 # sot-dyninv. If not, see <http://www.gnu.org/licenses/>.
 
-INCLUDE(../cmake/python.cmake)
+INCLUDE(${SOT_CMAKE_DIR}/python.cmake)
 FINDPYTHON()
 
 IF(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
@@ -42,9 +42,10 @@ LINK_DIRECTORIES(${PYTHON_LIBRARY_DIRS})
 # --- COMPILATION OF PLUGINS
 FOREACH(lib ${libs})
   ADD_LIBRARY(${lib} SHARED ${lib}.cpp)
+  target_link_libraries(${lib} ${catkin_LIBRARIES})
 
   SET_TARGET_PROPERTIES(${lib} PROPERTIES
-    PREFIX ""
+    LIBRARY_OUTPUT_DIRECTORY ${DYNAMIC_GRAPH_PLUGINDIR}
     SOVERSION ${PROJECT_VERSION})
 
   IF(${lib}_plugins_dependencies)
@@ -56,17 +57,15 @@ FOREACH(lib ${libs})
     TARGET_LINK_LIBRARIES(${lib} "${${lib}_ext_plugins_dependencies}")
   ENDIF(${lib}_ext_plugins_dependencies)
 
-  PKG_CONFIG_USE_DEPENDENCY(${lib} sot-core)
-  PKG_CONFIG_USE_DEPENDENCY(${lib} dynamic-graph)
-  PKG_CONFIG_USE_DEPENDENCY(${lib} soth)
 
-  INSTALL(TARGETS ${lib} DESTINATION ${DYNAMIC_GRAPH_PLUGINDIR})
+  INSTALL(TARGETS ${lib} DESTINATION lib/dynamic-graph)
   # build python submodule
   STRING(REPLACE - _ PYTHON_LIBRARY_NAME ${lib})
   DYNAMIC_GRAPH_PYTHON_MODULE("sot/dyninv/${PYTHON_LIBRARY_NAME}"
-    ${lib}
+    ""
     sot-dyninv-${PYTHON_LIBRARY_NAME}-wrap
     )
+  target_link_libraries(sot-dyninv-${PYTHON_LIBRARY_NAME}-wrap ${lib} ${catkin_LIBRARIES})
 ENDFOREACH(lib)
 
 # Install empty __init__.py files in intermediate directories.

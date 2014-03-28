@@ -2,7 +2,7 @@
 # ******************************************************************************
 # ______________________________________________________________________________
 # ******************************************************************************
-
+from dynamic_graph.tracer import Tracer
 from dynamic_graph import plug
 from dynamic_graph.sot.core import *
 from dynamic_graph.sot.core.math_small_entities import Derivator_of_Matrix
@@ -216,7 +216,7 @@ for name,joint in [ ['LF','left-ankle'], ['RF','right-ankle' ] ]:
     locals()['contact'+name] = contact
 
 # --- TRACER -----------------------------------------------------------------
-from dynamic_graph.tracer import *
+from dynamic_graph.tracer import Tracer
 tr = Tracer('tr')
 tr.open('/tmp/','','.dat')
 tr.start()

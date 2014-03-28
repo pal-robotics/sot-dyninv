@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>sot-dyninv</name>
+  <version>0.1.0</version>
+  <description>The sot-dyinv package</description>
+
+  <maintainer email="hilario@todo.todo">hilario</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>jrl-mal</build_depend>
+  <build_depend>dynamic-graph</build_depend>
+  <build_depend>sot-core</build_depend>
+  <build_depend>soth</build_depend>
+  
+  <run_depend>soth</run_depend>
+
+</package>

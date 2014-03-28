@@ -1,4 +1,4 @@
-INCLUDE(../cmake/python.cmake)
+INCLUDE(${SOT_CMAKE_DIR}/python.cmake)
 FINDPYTHON()
 
 INSTALL(
