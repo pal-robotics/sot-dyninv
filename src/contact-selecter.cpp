@@ -169,7 +169,7 @@ namespace dynamicgraph
       /* --- SIGNALS ---------------------------------------------------------- */
 
       int& ContactSelecter::
-      triggerSOUT_function( int&,int t)
+      triggerSOUT_function( int& return_value,int t)
       {
 	BOOST_FOREACH( ContactInfo_map::value_type iter, contacts)
 	  {
@@ -225,7 +225,7 @@ namespace dynamicgraph
 		contact->status = newStatus;
 	      }
 	  }
-
+          return return_value;
       }
       
       void ContactSelecter::display( std::ostream& os ) const
