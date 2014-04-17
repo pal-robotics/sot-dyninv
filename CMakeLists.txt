@@ -42,7 +42,10 @@ SETUP_PROJECT()
 include_directories(${catkin_INCLUDE_DIRS} ${Eigen_INCLUDE_DIRS})
 link_directories(${DYNAMIC_GRAPH_PLUGINDIR})
 
-catkin_package(DEPENDS soth)
+catkin_package(
+  INCLUDE_DIRS include
+  CATKIN_DEPENDS soth
+)
 
 # List plug-ins that will be compiled.
 SET(libs
@@ -117,6 +120,7 @@ list(APPEND pseudo-robot-dynamic_plugins_dependencies dynamic-integrator)
 list(APPEND contact-selecter_plugins_dependencies solver-dyn-reduced)
 
 # Add subdirectories.
+ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(python)
 #ADD_SUBDIRECTORY(unitTesting)

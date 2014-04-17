@@ -28,24 +28,22 @@ SET(${PROJECT_NAME}_HEADERS
 	solver-op-space.h
 	zmp-estimator.h
 	pseudo-robot-dynamic.h
+        
+        task-joint-limits.h
 )
 
 # Recreate correct path for the headers
 #--------------------------------------
 
-SET(fullpath_${PROJECT_NAME}_HEADERS)
 FOREACH(lHeader ${${PROJECT_NAME}_HEADERS})
-  SET(fullpath_${PROJECT_NAME}_HEADERS
-    ${fullpath_${PROJECT_NAME}_HEADERS}
-    ./${PROJECT_NAME}/${lHeader}
-  )
+  file(COPY ../src/${lHeader} DESTINATION ${CATKIN_DEVEL_PREFIX}/include/${PROJECT_NAME}/)
 
 ENDFOREACH(lHeader)
+
+INSTALL(DIRECTORY ${CATKIN_DEVEL_PREFIX}/include/${PROJECT_NAME}/
+	DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}/
+)
 
 #----------------------------------------------------
 # Install procedure for the header files
 #----------------------------------------------------
-INSTALL(FILES ${fullpath_${PROJECT_NAME}_HEADERS}
-	DESTINATION include/${PROJECT_NAME}
-        PERMISSIONS OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE
-)
