@@ -181,7 +181,8 @@ namespace dynamicgraph
       void SolverKine::checkDynamicTask (const TaskAbstract& task) const
       {
 	try {
-	  dynamic_cast <const TaskDynPD &> (task);
+    const TaskDynPD & tmp = dynamic_cast <const TaskDynPD &> (task);
+    (void) tmp;
 	} catch (const std::bad_cast& esc) {
 	  std::string taskName = task.getName ();
 	  std::string className = task.getClassName ();
